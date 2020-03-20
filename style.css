@@ -1,3 +1,11 @@
 .col-md-3{
     background-color: gray;
 }
+
+.card{
+    margin: 3px;
+}
+
+.navbar-brand{
+    font-size: 50px;
+}
