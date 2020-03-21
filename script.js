@@ -9,7 +9,7 @@ let newCityText = search.val()
 function updateCard() {
   //declare city variable
   let city = search.val()
-  queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=" + apiKey;
+  queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + apiKey;
   console.log(city)
   //clear main-town card
   $("#main-town").empty()
@@ -22,12 +22,12 @@ function updateCard() {
   }).done(function (response) {
     console.log(response)
     //Display weather info
-    $("#main-town").append($("<p>").text("Temperature: " + Math.floor(response.list[0].main.temp) + "\xB0"))
-    $("#main-town").append($("<p>").text("Humidity: " + response.list[0].main.humidity + "%"))
-    $("#main-town").append($("<p>").text("Wind Speed: " + response.list[0].wind.speed))
+    $("#main-town").append($("<p>").text("Temperature: " + Math.floor(response.main.temp) + "\xB0"))
+    $("#main-town").append($("<p>").text("Humidity: " + response.main.humidity + "%"))
+    $("#main-town").append($("<p>").text("Wind Speed: " + response.wind.speed))
     $("#main-town").append($("<p>").text("UV Index: "))
     //put icon on the h3
-    let icon = response.list[0].weather[0].icon
+    let icon = response.weather[0].icon
     let src = "http://openweathermap.org/img/wn/"+ icon + "@2x.png"
     $("#main-town").find("h3").append($("<img>").attr("src", src))
   })
@@ -59,11 +59,11 @@ function fiveDay(){
   let city = search.val()
   queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=" + apiKey;
   //hook into each day card
-  let day1 = $("#1")
-  let day2 = $("#2")
-  let day3 = $("#3")
-  let day4 = $("#4")
-  let day5 = $("#5")
+  let day1 = $("#5")
+  let day2 = $("#13")
+  let day3 = $("#21")
+  let day4 = $("#29")
+  let day5 = $("#37")
 
   $.ajax({
     url: queryURL,
@@ -77,14 +77,12 @@ function fiveDay(){
     day5.find("h6").text(moment().add(5, 'days').format('MMMM D YYYY'))
 
     //loop through the cards to place the icons
-    for(i=5; i<6; i++){
-    j = 1
-    var card = $("#" + j)
+    for(i=5; i<40; i+=8){
+    var card = $("#" + i)
     var icon = response.list[i].weather[0].icon
     console.log(icon)
     let src = "http://openweathermap.org/img/wn/"+ icon + "@2x.png"
     card.append($("<img>").attr("src", src))
-    i += 8
     }
 
 })
