@@ -9,3 +9,7 @@
 .navbar-brand{
     font-size: 50px;
 }
+
+.card-body h6{
+    font-size: 10px;
+}

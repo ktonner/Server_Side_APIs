@@ -9,12 +9,12 @@ let newCityText = search.val()
 function updateCard() {
   //declare city variable
   let city = search.val()
-  queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&cnt=5&units=imperial&appid=" + apiKey;
+  queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=" + apiKey;
   console.log(city)
   //clear main-town card
   $("#main-town").empty()
   //select main-town card, select it's h3 and update its text
-  $("#main-town").append($("<h3>").text(city + ", " + moment().format('MMMM Do YYYY, h:mm a')))
+  $("#main-town").append($("<h3>").text(city + ", " + moment().format('MMMM D YYYY, h:mm a')))
   //make request to API for info on searched city
   $.ajax({
     url: queryURL,
@@ -57,7 +57,7 @@ function uvIndex() {
 //function for the five day forecast
 function fiveDay(){
   let city = search.val()
-  queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&cnt=5&units=imperial&appid=" + apiKey;
+  queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=" + apiKey;
   //hook into each day card
   let day1 = $("#1")
   let day2 = $("#2")
@@ -69,7 +69,25 @@ function fiveDay(){
     url: queryURL,
     method: 'GET'
   }).done(function (response) {
-    
+    //update the h5 tags
+    day1.find("h6").text(moment().add(1, 'days').format('MMMM D YYYY'))
+    day2.find("h6").text(moment().add(2, 'days').format('MMMM D YYYY'))
+    day3.find("h6").text(moment().add(3, 'days').format('MMMM D YYYY'))
+    day4.find("h6").text(moment().add(4, 'days').format('MMMM D YYYY'))
+    day5.find("h6").text(moment().add(5, 'days').format('MMMM D YYYY'))
+
+    //loop through the cards to place the icons
+    for(i=5; i<6; i++){
+    j = 1
+    var card = $("#" + j)
+    var icon = response.list[i].weather[0].icon
+    console.log(icon)
+    let src = "http://openweathermap.org/img/wn/"+ icon + "@2x.png"
+    card.append($("<img>").attr("src", src))
+    i += 8
+    }
+
+})
 }
 
 
