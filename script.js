@@ -7,10 +7,31 @@ let newCityText = search.val()
 
 
 //function on starting up the site, if there was a last city displayed
-function init(){
-  console.log(localStorage.getItem("forecast"))
-  console.log(JSON.parse(localStorage.getItem("forecast")))
-  
+function init() {
+  //clear main-town card
+  $("#main-town").empty()
+  //get city from local storage
+  let city = localStorage.getItem("city")
+  queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + apiKey;
+  //setting title of card
+  $("#main-town").append($("<h3>").text(city + ", " + moment().format('MMMM D YYYY, h:mm a')))
+  //copied code from the updateCard function
+   //make request to API for info on searched city
+   $.ajax({
+    url: queryURL,
+    method: 'GET'
+  }).done(function (response) {
+    //Display weather info
+    $("#main-town").append($("<p>").text("Temperature: " + Math.floor(response.main.temp) + "\xB0"))
+    $("#main-town").append($("<p>").text("Humidity: " + response.main.humidity + "%"))
+    $("#main-town").append($("<p>").text("Wind Speed: " + response.wind.speed + " MPH"))
+    $("#main-town").append($("<p>").text("UV Index: "))
+    //put icon on the h3
+    let icon = response.weather[0].icon
+    let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
+    $("#main-town").find("h3").append($("<img>").attr("src", src))
+  })
+
 }
 
 //function to display current info in big card
@@ -38,8 +59,8 @@ function updateCard() {
     let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
     $("#main-town").find("h3").append($("<img>").attr("src", src))
   })
-  //put this entire card in local storage
-  localStorage.setItem("forecast", JSON.stringify($("#main-town")))
+  //put this city in local storage
+  localStorage.setItem("city", city)
 }
 
 function uvIndex() {
