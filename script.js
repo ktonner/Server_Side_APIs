@@ -5,7 +5,13 @@ let search = $(".form-control")
 let list = $("#list")
 let newCityText = search.val()
 
-//display current info in big card
+
+//function on starting up the site, if there was a last city displayed
+function init(){
+  JSON.parse(localStorage.getItem("forecast"))
+}
+
+//function to display current info in big card
 function updateCard() {
   //declare city variable
   let city = search.val()
@@ -30,6 +36,7 @@ function updateCard() {
     let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
     $("#main-town").find("h3").append($("<img>").attr("src", src))
   })
+  localStorage.setItem("forecast", JSON.stringify($("#main-town")))
 }
 
 function uvIndex() {
