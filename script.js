@@ -8,7 +8,9 @@ let newCityText = search.val()
 
 //function on starting up the site, if there was a last city displayed
 function init(){
-  JSON.parse(localStorage.getItem("forecast"))
+  console.log(localStorage.getItem("forecast"))
+  console.log(JSON.parse(localStorage.getItem("forecast")))
+  
 }
 
 //function to display current info in big card
@@ -36,6 +38,7 @@ function updateCard() {
     let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
     $("#main-town").find("h3").append($("<img>").attr("src", src))
   })
+  //put this entire card in local storage
   localStorage.setItem("forecast", JSON.stringify($("#main-town")))
 }
 
@@ -126,6 +129,5 @@ search.on("keyup", function () {
   }
 })
 
-//display current info in big card
-//display five day forecast
-//save list of cities to local storage
+//call initial function
+init()
