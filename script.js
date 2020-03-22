@@ -20,15 +20,14 @@ function updateCard() {
     url: queryURL,
     method: 'GET'
   }).done(function (response) {
-    console.log(response)
     //Display weather info
     $("#main-town").append($("<p>").text("Temperature: " + Math.floor(response.main.temp) + "\xB0"))
     $("#main-town").append($("<p>").text("Humidity: " + response.main.humidity + "%"))
-    $("#main-town").append($("<p>").text("Wind Speed: " + response.wind.speed))
+    $("#main-town").append($("<p>").text("Wind Speed: " + response.wind.speed + " MPH"))
     $("#main-town").append($("<p>").text("UV Index: "))
     //put icon on the h3
     let icon = response.weather[0].icon
-    let src = "http://openweathermap.org/img/wn/"+ icon + "@2x.png"
+    let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
     $("#main-town").find("h3").append($("<img>").attr("src", src))
   })
 }
@@ -43,49 +42,59 @@ function uvIndex() {
     let lat = response.city.coord.lat.toFixed(2)
     let lon = response.city.coord.lon.toFixed(2)
     console.log(lat)
-  
-  $.ajax({
-    url: "http://api.openweathermap.org/data/2.5/uvi?appid=9c77c2d5b00d3d1f3c69362296775802" + "&lat=" + lat + "lon=" + lon,
-    method: 'GET'
-  }).done(function (response) {
-    console.log(response)
 
+    $.ajax({
+      url: "http://api.openweathermap.org/data/2.5/uvi?appid=9c77c2d5b00d3d1f3c69362296775802" + "&lat=" + lat + "lon=" + lon,
+      method: 'GET'
+    }).done(function (response) {
+      console.log(response)
+
+    })
   })
-})
 }
 
 //function for the five day forecast
-function fiveDay(){
+function fiveDay() {
+  //clear content from any previous forecasts
+  $(".five-day").children(".card").empty()
   let city = search.val()
   queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=" + apiKey;
-  //hook into each day card
-  let day1 = $("#5")
-  let day2 = $("#13")
-  let day3 = $("#21")
-  let day4 = $("#29")
-  let day5 = $("#37")
 
   $.ajax({
     url: queryURL,
     method: 'GET'
   }).done(function (response) {
-    //update the h5 tags
-    day1.find("h6").text(moment().add(1, 'days').format('MMMM D YYYY'))
-    day2.find("h6").text(moment().add(2, 'days').format('MMMM D YYYY'))
-    day3.find("h6").text(moment().add(3, 'days').format('MMMM D YYYY'))
-    day4.find("h6").text(moment().add(4, 'days').format('MMMM D YYYY'))
-    day5.find("h6").text(moment().add(5, 'days').format('MMMM D YYYY'))
+    console.log(response)
+    //hook into each day card
+    let day1 = $("#6")
+    let day2 = $("#14")
+    let day3 = $("#22")
+    let day4 = $("#30")
+    let day5 = $("#38")
 
-    //loop through the cards to place the icons
-    for(i=5; i<40; i+=8){
-    var card = $("#" + i)
-    var icon = response.list[i].weather[0].icon
-    console.log(icon)
-    let src = "http://openweathermap.org/img/wn/"+ icon + "@2x.png"
-    card.append($("<img>").attr("src", src))
+
+    //create the h6 tags of the dates of the five days
+    day1.append($("<h6>").text(moment().add(1, 'days').format('MMMM D YYYY')))
+    day2.append($("<h6>").text(moment().add(2, 'days').format('MMMM D YYYY')))
+    day3.append($("<h6>").text(moment().add(3, 'days').format('MMMM D YYYY')))
+    day4.append($("<h6>").text(moment().add(4, 'days').format('MMMM D YYYY')))
+    day5.append($("<h6>").text(moment().add(5, 'days').format('MMMM D YYYY')))
+
+    //loop through the cards to place the icons and the info
+    for (i = 6; i < 40; i += 8) {
+      //each card selected in loop
+      var card = $("#" + i)
+      //set up icon
+      var icon = response.list[i].weather[0].icon
+      console.log(icon)
+      let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
+      card.append($("<img>").attr("src", src))
+      //now the text info
+      card.append($("<p>").text("Temperature: " + Math.floor(response.list[i].main.temp) + "\xB0"))
+      card.append($("<p>").text("Humidity: " + response.list[i].main.humidity + "%"))
     }
 
-})
+  })
 }
 
 
