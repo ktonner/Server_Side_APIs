@@ -1,9 +1,10 @@
 //declaring variables
 let apiKey = "9c77c2d5b00d3d1f3c69362296775802";
-let city = "";
 let search = $(".form-control")
+let city = search.val()
 let list = $("#list")
 let newCityText = search.val()
+
 
 
 //function on starting up the site, if there was a last city displayed
@@ -12,32 +13,15 @@ function init() {
   $("#main-town").empty()
   //get city from local storage
   let city = localStorage.getItem("city")
-  queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + apiKey;
   //setting title of card
   $("#main-town").append($("<h3>").text(city + ", " + moment().format('MMMM D YYYY, h:mm a')))
-  //copied code from the updateCard function
-   //make request to API for info on searched city
-   $.ajax({
-    url: queryURL,
-    method: 'GET'
-  }).done(function (response) {
-    //Display weather info
-    $("#main-town").append($("<p>").text("Temperature: " + Math.floor(response.main.temp) + "\xB0"))
-    $("#main-town").append($("<p>").text("Humidity: " + response.main.humidity + "%"))
-    $("#main-town").append($("<p>").text("Wind Speed: " + response.wind.speed + " MPH"))
-    $("#main-town").append($("<p>").text("UV Index: "))
-    //put icon on the h3
-    let icon = response.weather[0].icon
-    let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
-    $("#main-town").find("h3").append($("<img>").attr("src", src))
-  })
+  //run update card and the five day forecast
 
 }
 
 //function to display current info in big card
 function updateCard() {
   //declare city variable
-  let city = search.val()
   queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + apiKey;
   console.log(city)
   //clear main-town card
@@ -88,7 +72,6 @@ function uvIndex() {
 function fiveDay() {
   //clear content from any previous forecasts
   $(".five-day").children(".card").empty()
-  let city = search.val()
   queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial&appid=" + apiKey;
 
   $.ajax({
