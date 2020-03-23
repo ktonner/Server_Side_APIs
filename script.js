@@ -97,6 +97,8 @@ function updateCard() {
   //declare city variable
   queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + apiKey;
   console.log(city)
+  //capitalize in case they didn't
+  city = city.charAt(0).toUpperCase() + city.slice(1)
   //clear main-town card
   $("#main-town").empty()
   //select main-town card, select it's h3 and update its text
@@ -173,13 +175,20 @@ function fiveDay() {
       //set up icon
       var icon = response.list[i].weather[0].icon
       console.log(icon)
+      //need to make sure the icon is the day version
+      if(icon.charAt(2) == "n"){
+        icon = icon.slice(0,2)
+        console.log(icon)
+        icon = icon + "d"
+        console.log(icon)
+      }
       let src = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
       card.append($("<img>").attr("src", src))
       //now the text info
       card.append($("<p>").text("Temperature: " + Math.floor(response.list[i].main.temp) + "\xB0"))
       card.append($("<p>").text("Humidity: " + response.list[i].main.humidity + "%"))
     }
-
+  
   })
 }
 
@@ -194,10 +203,13 @@ search.on("keyup", function () {
     city = search.val();
 
     let newCityText = search.val();
+
+    //capitalize the search
+    newCityText = newCityText.charAt(0).toUpperCase() + newCityText.slice(1)
     console.log(newCityText);
     
     //create list item with the search as text
-    let newCity = $("<li>").addClass("list-group-item")
+    let newCity = $("<li>").addClass("list-group-item a")
     newCity.text(newCityText)
     //append to list
     list.find("ul").append(newCity)
@@ -231,6 +243,16 @@ search.on("keyup", function () {
     $(".form-control").val("");
   }
 })
+
+
+//getting the list items to update the page
+$(".list-group-item").on("click", function(){
+    city = (event.target.innerHTML())
+    updateCard()
+    fiveDay()
+
+  }
+)
 
 //call initial function
 init()
